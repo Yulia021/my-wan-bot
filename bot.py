@@ -32,13 +32,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         # Panggil API Fal.ai
         handler = await fal_client.submit_async(
-            "fal-ai/wan/v2.1/t2v",
-            arguments={
-                "prompt": prompt,
-                "aspect_ratio": "16:9",
-                "num_frames": 81
-            }
-        )
+    "fal-ai/wan-video/v2.1/t2v-14b", # Jalur untuk versi 14B yang lebih bertenaga
+    arguments={
+        "prompt": prompt,
+        "aspect_ratio": "9:16",
+        "num_frames": 81
+    }
+)
         
         result = await handler.get()
         video_url = result['video']['url']
@@ -66,3 +66,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
