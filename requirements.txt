@@ -1,2 +1,2 @@
-fal-client
 python-telegram-bot
+fal-client
