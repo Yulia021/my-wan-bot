@@ -7,7 +7,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # --- Ambil Config dari Railway Variables ---
 TOKEN_TELEGRAM = os.getenv("TELEGRAM_TOKEN")
 FAL_KEY = os.getenv("FAL_KEY")
-ADMIN_ID = 123456789 # GANTI dengan ID kamu (dari @userinfobot)
+ADMIN_ID = 1788047490 # GANTI dengan ID kamu (dari @userinfobot)
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Pastikan hanya kamu yang bisa pakai
@@ -53,3 +53,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
