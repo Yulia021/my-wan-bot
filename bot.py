@@ -2,15 +2,16 @@ import os
 import asyncio
 import fal_client
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
-# --- Ambil Config dari Railway Variables ---
+# Ambil Config dari Railway Variables
 TOKEN_TELEGRAM = os.getenv("TELEGRAM_TOKEN")
 FAL_KEY = os.getenv("FAL_KEY")
-ADMIN_ID = 1788047490 # GANTI dengan ID kamu (dari @userinfobot)
+# Pastikan ADMIN_ID adalah angka, bukan teks
+ADMIN_ID = int(os.getenv("ADMIN_ID", "0")) 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Pastikan hanya kamu yang bisa pakai
+    # Filter agar hanya kamu yang bisa pakai
     if update.effective_user.id != ADMIN_ID:
         return 
 
@@ -18,12 +19,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     status_msg = await update.message.reply_text("⏳ Sedang memproses video Wan 2.1... (Saldo $10 Oke)")
 
     try:
-        # JALUR MODEL TERBARU & BENAR
+        # Gunakan jalur model yang benar
         handler = await fal_client.submit_async(
-            "fal-ai/wan-video/v2.1/t2v-14b", 
+            "fal-ai/wan-video/v2.1/t2v-14b",
             arguments={
                 "prompt": prompt,
-                "aspect_ratio": "9:16", # Sesuai keinginanmu untuk Shorts/TikTok
+                "aspect_ratio": "9:16",
                 "num_frames": 81
             }
         )
@@ -31,26 +32,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         result = await handler.get()
         video_url = result['video']['url']
 
-        await update.message.reply_video(
-            video=video_url, 
-            caption=f"✅ Video Celia Selesai!\nPrompt: {prompt}"
-        )
+        await update.message.reply_video(video=video_url, caption=f"✅ Berhasil!\nPrompt: {prompt}")
         await status_msg.delete()
 
     except Exception as e:
-        await update.message.reply_text(f"❌ Error Detail: {str(e)}")
+        await update.message.reply_text(f"❌ Error saat proses: {str(e)}")
 
 def main():
-    # Pastikan variabel TOKEN_TELEGRAM dan FAL_KEY sudah benar
+    if not TOKEN_TELEGRAM or not FAL_KEY:
+        print("Error: Variabel TELEGRAM_TOKEN atau FAL_KEY kosong!")
+        return
+
+    # Inisialisasi bot dengan drop_pending_updates agar tidak antre pesan lama
     app = Application.builder().token(TOKEN_TELEGRAM).build()
-    
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
-    print("Bot Wan 2.1 Aktif & Terkunci...")
-    
-    # drop_pending_updates=True akan menghapus semua pesan yang 
-    # masuk saat bot sedang error/mati agar tidak terjadi tabrakan.
-    app.run_polling(drop_pending_updates=True) 
+    print("Bot Wan 2.1 Online & Menunggu Prompt...")
+    app.run_polling(drop_pending_updates=True)
 
 if __name__ == "__main__":
     main()
