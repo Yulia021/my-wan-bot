@@ -41,15 +41,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Error Detail: {str(e)}")
 
 def main():
-    if not TOKEN_TELEGRAM or not FAL_KEY:
-        print("Error: Variabel TELEGRAM_TOKEN atau FAL_KEY belum diisi di Railway!")
-        return
-
     app = Application.builder().token(TOKEN_TELEGRAM).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("Bot Wan 2.1 Aktif & Terkunci...")
-    app.run_polling()
+    # Tambahkan drop_pending_updates=True untuk membuang antrean lama
+    app.run_polling(drop_pending_updates=True) 
 
 if __name__ == "__main__":
     main()
