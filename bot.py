@@ -45,10 +45,9 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("Bot Wan 2.1 Aktif & Terkunci...")
-    # Tambahkan drop_pending_updates=True untuk membuang antrean lama
+    # Menghapus pesan lama agar tidak terjadi Conflict lagi
     app.run_polling(drop_pending_updates=True) 
 
 if __name__ == "__main__":
     main()
-
 
