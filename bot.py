@@ -41,13 +41,16 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Error Detail: {str(e)}")
 
 def main():
+    # Pastikan variabel TOKEN_TELEGRAM dan FAL_KEY sudah benar
     app = Application.builder().token(TOKEN_TELEGRAM).build()
+    
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
     print("Bot Wan 2.1 Aktif & Terkunci...")
-    # Menghapus pesan lama agar tidak terjadi Conflict lagi
+    
+    # drop_pending_updates=True akan menghapus semua pesan yang 
+    # masuk saat bot sedang error/mati agar tidak terjadi tabrakan.
     app.run_polling(drop_pending_updates=True) 
 
 if __name__ == "__main__":
     main()
-
